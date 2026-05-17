@@ -3,7 +3,7 @@
 ## Before Publishing
 
 - [ ] Remove local `.env` files from staged changes.
-- [ ] Remove generated media, logs, `.ef2/.ief`, and executables.
+- [ ] Remove generated media, logs, IDM queue files, and executables.
 - [ ] Run `pnpm install --frozen-lockfile`.
 - [ ] Run backend Prisma generate and validate.
 - [ ] Run worker Prisma generate and validate.

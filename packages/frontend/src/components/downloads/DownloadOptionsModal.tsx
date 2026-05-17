@@ -106,7 +106,7 @@ export function DownloadOptionsModal({
               <select value={idmMonitorMode} onChange={(event) => setIdmMonitorMode(event.target.value as any)} className="glass-input w-full text-sm">
                 <option value="MONITOR">Enviar e monitorar</option>
                 <option value="SEND_ONLY">Enviar sem monitorar</option>
-                <option value="IMPORT_FILE">Gerar .ef2/.ief</option>
+                <option value="IMPORT_FILE">Gerar fila .cmd para IDM</option>
               </select>
             </label>
           )}
@@ -114,7 +114,7 @@ export function DownloadOptionsModal({
 
         <div className="mt-5 rounded-xl border border-white/5 bg-black/15 p-3 text-xs text-white/45 font-mono">
           {downloadEngine === 'IDM' && idmMonitorMode === 'IMPORT_FILE'
-            ? 'Será gerado um arquivo .ef2 e .ief para importar no IDM.'
+            ? 'Será gerado um .cmd que adiciona todos os links na fila do IDM.'
             : 'O download será enviado para a fila interna.'}
         </div>
 

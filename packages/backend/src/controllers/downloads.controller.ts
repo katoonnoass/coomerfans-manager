@@ -178,20 +178,20 @@ export async function createDownload(req: AuthRequest, res: Response) {
       jobId: job.id,
       modelName: model.name,
       downloadRoot,
-      media: job.media.map((item) => ({ id: item.id, url: item.url })),
+      media: job.media.map((item) => ({ id: item.id, url: item.url, type: item.type })),
     });
 
     await prisma.downloadJob.update({
       where: { id: job.id },
       data: {
         status: 'PENDING',
-        errorMessage: `Arquivo IDM gerado: ${importFiles.ef2Path}`,
+        errorMessage: `Arquivo IDM gerado: ${importFiles.cmdPath}`,
       },
     });
 
     res.status(201).json({
       ...job,
-      errorMessage: `Arquivo IDM gerado: ${importFiles.ef2Path}`,
+      errorMessage: `Arquivo IDM gerado: ${importFiles.cmdPath}`,
       totalSize: job.totalSize ? Number(job.totalSize) : null,
       downloadedSize: Number(job.downloadedSize),
       createdAt: job.createdAt.toISOString(),

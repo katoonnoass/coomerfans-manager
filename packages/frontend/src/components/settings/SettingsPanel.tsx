@@ -128,7 +128,7 @@ export function SettingsPanel() {
               >
                 <option value="MONITOR">Monitorar</option>
                 <option value="SEND_ONLY">Enviar sem monitorar</option>
-                <option value="IMPORT_FILE">Gerar arquivo .ef2/.ief</option>
+                <option value="IMPORT_FILE">Gerar fila .cmd para IDM</option>
               </select>
             </div>
           )}

@@ -28,7 +28,7 @@ It is built as a local-first stack: your database, queue, downloaded media, IDM 
 | Media browser | Grid/list modes, type filters, selection tools, status indicators |
 | Refresh engine | Fast scan, full scan, deduplication, progress reporting, recovery controls |
 | Downloads | Native segmented downloader, retry/resume, validation, queue monitoring |
-| IDM | Direct IDM launch plus `.ef2`/`.ief` import-file generation |
+| IDM | Direct IDM launch plus `.cmd` queue-file generation |
 | Organization | Download queue grouped by profile with expand/collapse controls |
 | Diagnostics | Queue health, storage checks, failed-job repair, activity history |
 | Windows agent | Electron control panel for backend, worker, frontend, PostgreSQL, and Redis |
@@ -165,13 +165,13 @@ The app can send downloads directly to Internet Download Manager when IDM is ins
 
 ### IDM Import File
 
-For large batches, enable IDM import-file generation. The app writes `.ef2`/`.ief` files under:
+For large batches, enable IDM queue-file generation. The app writes a `.cmd` file and a `.txt` URL list under:
 
 ```text
 MEDIA_PATH/_idm_imports/
 ```
 
-Those links point to the local backend proxy so IDM can receive the required headers and range support.
+Run the generated `.cmd` file while the backend is running. It uses IDM's command-line interface to add every local proxy link to the IDM queue and then starts the queue.
 
 ## Troubleshooting
 

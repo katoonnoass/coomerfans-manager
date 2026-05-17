@@ -244,7 +244,7 @@ export function ModelDetail() {
         addToast({
           title: result.idmImport ? 'Arquivo IDM gerado' : result.enqueued > 0 ? 'Download Queued' : 'Download já existe',
           message: result.idmImport
-            ? result.idmImport.ef2Path
+            ? result.idmImport.cmdPath || result.idmImport.txtPath
             : result.enqueued > 0
             ? `${result.enqueued} items added to queue${result.skipped ? ` · ${result.skipped} já baixados` : ''}`
             : `${result.skipped || allMediaIds.length} links já foram baixados`,

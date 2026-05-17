@@ -18,6 +18,7 @@ const REQUEST_HEADERS = {
 export interface IdmImportMediaItem {
   id: string;
   url: string;
+  type?: string | null;
 }
 
 function secret() {
@@ -60,13 +61,49 @@ export function createIdmImportFiles(options: {
   fs.mkdirSync(dir, { recursive: true });
   const safeModel = options.modelName.replace(/[^a-zA-Z0-9_-]/g, '_');
   const basename = `${safeModel}-${new Date().toISOString().replace(/[:.]/g, '-')}-${options.jobId}`;
+  const targetDir = path.join(path.resolve(root), safeModel);
+  fs.mkdirSync(targetDir, { recursive: true });
+
   const lines = options.media.map((item) => idmProxyUrl(item.id));
-  const content = `${lines.join('\r\n')}\r\n`;
-  const ef2Path = path.join(dir, `${basename}.ef2`);
-  const iefPath = path.join(dir, `${basename}.ief`);
-  fs.writeFileSync(ef2Path, content, 'utf8');
-  fs.writeFileSync(iefPath, content, 'utf8');
-  return { ef2Path, iefPath, count: lines.length };
+  const txtPath = path.join(dir, `${basename}.txt`);
+  fs.writeFileSync(txtPath, `${lines.join('\r\n')}\r\n`, 'utf8');
+
+  const idmCandidates = [
+    process.env.IDM_PATH,
+    'C:\\Program Files (x86)\\Internet Download Manager\\IDMan.exe',
+    'C:\\Program Files\\Internet Download Manager\\IDMan.exe',
+  ].filter(Boolean) as string[];
+  const commands = [
+    '@echo off',
+    'setlocal',
+    ...idmCandidates.map((candidate, index) =>
+      index === 0
+        ? `set "IDM_EXE=${candidate}"`
+        : `if not exist "%IDM_EXE%" set "IDM_EXE=${candidate}"`
+    ),
+    'if not exist "%IDM_EXE%" (',
+    '  echo IDM nao encontrado. Ajuste o caminho IDMan.exe neste arquivo.',
+    '  pause',
+    '  exit /b 1',
+    ')',
+    `if not exist "${targetDir}" mkdir "${targetDir}"`,
+    '',
+    ...options.media.map((item) => {
+      const url = idmProxyUrl(item.id);
+      const filename = `${item.id}${resolveExtension(item.url, item.type || undefined)}`;
+      return `"%IDM_EXE%" /d "${url}" /p "${targetDir}" /f "${filename}" /n /a`;
+    }),
+    '',
+    '"%IDM_EXE%" /s',
+    'echo Fila enviada para o IDM.',
+    'pause',
+    'endlocal',
+    '',
+  ];
+  const cmdPath = path.join(dir, `${basename}-import-to-idm.cmd`);
+  fs.writeFileSync(cmdPath, commands.join('\r\n'), 'utf8');
+
+  return { cmdPath, txtPath, count: lines.length };
 }
 
 export async function streamIdmProxyDownload(downloadMediaId: string, token: string, res: Response) {

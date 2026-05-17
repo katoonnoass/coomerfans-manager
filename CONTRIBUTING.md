@@ -28,7 +28,7 @@ pnpm validate
 - Keep changes focused.
 - Include screenshots for UI changes.
 - Include reproduction steps for bug fixes.
-- Do not commit `.env`, media, logs, generated `.ef2/.ief`, executables, or local database artifacts.
+- Do not commit `.env`, media, logs, generated IDM queue files, executables, or local database artifacts.
 
 ## Issues
 

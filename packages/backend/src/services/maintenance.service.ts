@@ -214,7 +214,7 @@ export function listIdmImportFiles() {
   if (!fs.existsSync(dir)) return { path: dir, files: [] };
 
   const files = fs.readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && /\.(ef2|ief)$/i.test(entry.name))
+    .filter((entry) => entry.isFile() && /\.(cmd|txt)$/i.test(entry.name))
     .map((entry) => {
       const fullPath = path.join(dir, entry.name);
       const stat = fs.statSync(fullPath);
