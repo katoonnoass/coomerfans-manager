@@ -1,5 +1,5 @@
 {
-  "name": "coomerfans-saas",
+  "name": "coomerfans-manager",
   "private": true,
   "scripts": {
     "dev": "turbo dev",

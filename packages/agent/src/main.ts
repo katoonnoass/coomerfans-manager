@@ -64,7 +64,7 @@ app.whenReady().then(() => {
   if (!ok) {
     manager.addLog('agent', '');
     manager.addLog('agent', '[ERROR] Project files not found!');
-    manager.addLog('agent', '[ERROR] Place this .exe inside the coomerfans-saas folder');
+    manager.addLog('agent', '[ERROR] Place this .exe inside the coomerfans-manager folder');
     manager.addLog('agent', `[ERROR] Current root: ${root}`);
   } else {
     manager.addLog('agent', '');

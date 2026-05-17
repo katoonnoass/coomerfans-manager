@@ -1,6 +1,6 @@
 <div align="center">
 
-# CoomerFans SaaS
+# CoomerFans Manager
 
 Local-first creator media indexer, profile manager, and download control panel.
 
@@ -12,11 +12,11 @@ Local-first creator media indexer, profile manager, and download control panel.
 
 </div>
 
-> CoomerFans SaaS is intended for personal archival and research workflows. Users are responsible for following the terms of service of any website they access and for respecting copyright, privacy, and local laws.
+> CoomerFans Manager is intended for personal archival and research workflows. Users are responsible for following the terms of service of any website they access and for respecting copyright, privacy, and local laws.
 
 ## What It Does
 
-CoomerFans SaaS helps organize creator profiles, refresh profile media, browse indexed content, and manage downloads through a local web app plus optional Windows control panel.
+CoomerFans Manager helps organize creator profiles, refresh profile media, browse indexed content, and manage downloads through a local web app plus optional Windows control panel.
 
 It is built as a local-first stack: your database, queue, downloaded media, IDM import files, and service control run on your machine.
 
@@ -68,8 +68,8 @@ Package   pnpm workspaces + Turbo
 ## Quick Start
 
 ```powershell
-git clone https://github.com/katoonnoass/coomerfans-saas.git
-cd coomerfans-saas
+git clone https://github.com/katoonnoass/coomerfans-manager.git
+cd coomerfans-manager
 copy .env.example .env
 pnpm install
 pnpm --filter @coomerfans/backend db:generate

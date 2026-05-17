@@ -118,7 +118,7 @@ export class ServerManager extends EventEmitter {
     this.addLog('agent', `node_modules: ${fs.existsSync(path.join(this.projectRoot, 'node_modules')) ? 'FOUND' : 'MISSING'}`);
 
     if (!fs.existsSync(backendDir) || !fs.existsSync(workerDir) || !fs.existsSync(frontendDir)) {
-      this.addLog('agent', 'ERROR: Project packages not found. Place exe in coomerfans-saas folder.');
+      this.addLog('agent', 'ERROR: Project packages not found. Place exe in coomerfans-manager folder.');
       return;
     }
 
