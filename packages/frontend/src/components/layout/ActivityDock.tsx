@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useDownloads } from '../../hooks/useAuth';
 import api from '../../lib/api';
 import { formatBytes, formatSpeed } from '../../lib/utils';
 
 export function ActivityDock() {
+  const location = useLocation();
   const { downloads } = useDownloads();
   const { data: health } = useQuery({
     queryKey: ['admin', 'health', 'dock'],
@@ -19,6 +20,10 @@ export function ActivityDock() {
   const failed = downloads.filter((job: any) => job.status === 'FAILED');
   const speed = active.reduce((sum: number, job: any) => sum + (job.speed || 0), 0);
   const downloaded = active.reduce((sum: number, job: any) => sum + (job.downloadedSize || 0), 0);
+
+  if (location.pathname.startsWith('/model/')) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-4 left-1/2 z-50 w-[min(980px,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-white/10 bg-void-900/95 px-4 py-3 shadow-2xl backdrop-blur">
