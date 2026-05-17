@@ -1,30 +1,60 @@
+<div align="center">
+
 # CoomerFans SaaS
 
-CoomerFans SaaS is a local-first content indexing and download manager for creator profiles. It provides profile search, profile refresh, media browsing, favorites, native downloads, IDM integration, IDM import-file generation, diagnostics, and queue monitoring.
+Local-first creator media indexer, profile manager, and download control panel.
 
-> This project is intended for personal archival and research workflows. Users are responsible for complying with the terms of service of any site they access and for respecting copyright and privacy laws.
+[![License: MIT](https://img.shields.io/badge/License-MIT-22c55e.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-9%2B-f69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-4169e1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Redis-6%2B-dc382d?logo=redis&logoColor=white)](https://redis.io/)
 
-## Features
+</div>
 
-- Profile catalog search and favorites
-- Fast and full profile refresh modes
-- Media grid/list with filters for type, downloaded state, and ordering
-- Native segmented downloads with retry, resume, validation, and CDN cooldown
-- IDM direct integration and `.ef2`/`.ief` import-file generation
-- Grouped download queue with pause/resume/retry by profile
-- Diagnostics page for queue, storage, failures, and repair actions
-- Notification history and bottom activity dock
-- Windows tray agent for local service control
+> CoomerFans SaaS is intended for personal archival and research workflows. Users are responsible for following the terms of service of any website they access and for respecting copyright, privacy, and local laws.
+
+## What It Does
+
+CoomerFans SaaS helps organize creator profiles, refresh profile media, browse indexed content, and manage downloads through a local web app plus optional Windows control panel.
+
+It is built as a local-first stack: your database, queue, downloaded media, IDM import files, and service control run on your machine.
+
+## Highlights
+
+| Area | Features |
+| --- | --- |
+| Profiles | Search, favorites, grouped aliases, profile refresh, media counters |
+| Media browser | Grid/list modes, type filters, selection tools, status indicators |
+| Refresh engine | Fast scan, full scan, deduplication, progress reporting, recovery controls |
+| Downloads | Native segmented downloader, retry/resume, validation, queue monitoring |
+| IDM | Direct IDM launch plus `.ef2`/`.ief` import-file generation |
+| Organization | Download queue grouped by profile with expand/collapse controls |
+| Diagnostics | Queue health, storage checks, failed-job repair, activity history |
+| Windows agent | Electron control panel for backend, worker, frontend, PostgreSQL, and Redis |
 
 ## Screenshots
 
-Add release screenshots under `docs/screenshots/` before publishing a GitHub release:
+Add release screenshots to `docs/screenshots/` before publishing a GitHub release.
 
-- `home.png`
-- `profile.png`
-- `downloads.png`
-- `diagnostics.png`
-- `settings.png`
+| Home | Profile |
+| --- | --- |
+| `docs/screenshots/home.png` | `docs/screenshots/profile.png` |
+
+| Downloads | Diagnostics |
+| --- | --- |
+| `docs/screenshots/downloads.png` | `docs/screenshots/diagnostics.png` |
+
+## Stack
+
+```text
+Frontend  React + Vite + Tailwind
+Backend   Node.js + Express + Prisma
+Worker    BullMQ + Redis
+Database  PostgreSQL
+Agent     Electron
+Package   pnpm workspaces + Turbo
+```
 
 ## Requirements
 
@@ -32,12 +62,13 @@ Add release screenshots under `docs/screenshots/` before publishing a GitHub rel
 - pnpm 9+
 - PostgreSQL 14+
 - Redis 6+
-- Optional: Internet Download Manager on Windows
+- Windows PowerShell
+- Optional: Internet Download Manager
 
 ## Quick Start
 
 ```powershell
-git clone <repo-url>
+git clone https://github.com/katoonnoass/coomerfans-saas.git
 cd coomerfans-saas
 copy .env.example .env
 pnpm install
@@ -47,21 +78,21 @@ pnpm --filter @coomerfans/backend db:push
 .\dev.ps1
 ```
 
-Open `http://localhost:5173`.
+Open:
 
-## Windows Agent
-
-If you build or download the agent:
-
-1. Start the control panel.
-2. Click `Start All`.
-3. Open `http://localhost:5173`.
-
-The generated portable executable is a release artifact and should not be committed.
+```text
+http://localhost:5173
+```
 
 ## Environment
 
-Copy `.env.example` to `.env` and adjust:
+Create your local environment file:
+
+```powershell
+copy .env.example .env
+```
+
+Main settings:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/coomerfans?schema=public"
@@ -75,23 +106,20 @@ IDM_PATH="C:\\Program Files (x86)\\Internet Download Manager\\IDMan.exe"
 IDM_IMPORT_BASE_URL="http://127.0.0.1:3001"
 ```
 
+Never commit `.env`, downloaded media, logs, generated IDM files, or local agent builds.
+
 ## Scripts
 
-```powershell
-.\setup.ps1      # checks tools, installs dependencies, prepares Prisma
-.\dev.ps1        # starts backend, worker, and frontend in separate windows
-.\start.ps1      # starts services for normal local use
-.\repair.ps1     # requeue/download and counter repair helpers
-```
-
-Package scripts:
-
-```bash
-pnpm typecheck
-pnpm build
-pnpm --filter @coomerfans/backend db:push
-pnpm --filter @coomerfans/backend db:seed
-```
+| Command | Purpose |
+| --- | --- |
+| `.\setup.ps1` | Checks tools, installs dependencies, prepares Prisma |
+| `.\dev.ps1` | Starts backend, worker, and frontend for development |
+| `.\start.ps1` | Starts services for normal local usage |
+| `.\repair.ps1` | Runs queue/download/counter repair helpers |
+| `pnpm typecheck` | Typechecks all packages through Turbo |
+| `pnpm build` | Builds workspace packages |
+| `pnpm validate` | Validates Prisma/client setup |
+| `pnpm release:check` | Runs the release verification pipeline |
 
 ## Docker
 
@@ -99,59 +127,77 @@ pnpm --filter @coomerfans/backend db:seed
 docker compose up --build
 ```
 
-Services:
+Default services:
 
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:3001`
-- PostgreSQL: `localhost:5432`
-- Redis: `localhost:6379`
+| Service | URL |
+| --- | --- |
+| Frontend | `http://localhost:5173` |
+| Backend | `http://localhost:3001` |
+| PostgreSQL | `localhost:5432` |
+| Redis | `localhost:6379` |
 
-Docker is intended as a development baseline. For production, configure secrets, volumes, network access, and reverse proxy explicitly.
-
-## IDM Import Files
-
-When `Settings -> Motor de download -> IDM` and `Modo IDM -> Gerar arquivo .ef2/.ief` are enabled, new downloads generate import files in:
-
-```text
-MEDIA_PATH/_idm_imports/
-```
-
-The links point to the local backend proxy so IDM receives the required headers and range support.
+Docker is provided as a development baseline. For production use, configure secrets, persistent volumes, network exposure, and a reverse proxy explicitly.
 
 ## Project Structure
 
 ```text
 packages/
-  backend/   Express API, Prisma, auth, scraper services
-  frontend/  React, Vite, Tailwind UI
-  worker/    BullMQ download and scrape workers
-  shared/    Shared types and validation schemas
-  agent/     Electron control panel
+  backend/    Express API, Prisma, auth, scraper services
+  frontend/   React, Vite, Tailwind interface
+  worker/     BullMQ scrape and download workers
+  shared/     Shared types and validation schemas
+  agent/      Electron control panel
+
+scripts/      Maintenance and validation helpers
+docs/         Documentation and screenshot placeholders
+.github/      CI workflow
 ```
+
+## Download Modes
+
+### Native
+
+The native downloader uses queue jobs, segmented transfer, retry/resume behavior, validation, and local progress tracking.
+
+### IDM Direct
+
+The app can send downloads directly to Internet Download Manager when IDM is installed and `IDM_PATH` is configured.
+
+### IDM Import File
+
+For large batches, enable IDM import-file generation. The app writes `.ef2`/`.ief` files under:
+
+```text
+MEDIA_PATH/_idm_imports/
+```
+
+Those links point to the local backend proxy so IDM can receive the required headers and range support.
 
 ## Troubleshooting
 
-### Backend does not start
+| Problem | Check |
+| --- | --- |
+| Backend does not start | PostgreSQL is running, `DATABASE_URL` is correct, then run `db:push` |
+| Worker timeouts | Redis is running and queue diagnostics are clean |
+| IDM returns 403/502 | Use import-file mode and keep backend running while IDM downloads |
+| Profile refresh is slow | Use fast scan for daily refresh and full scan only when media is missing |
+| Counters look wrong | Run diagnostics/repair actions and refresh the profile again |
 
-- Check PostgreSQL is running.
-- Check `DATABASE_URL`.
-- Run `pnpm --filter @coomerfans/backend db:push`.
+## Release Checklist
 
-### Worker times out
+Before publishing a release:
 
-- Check Redis is running.
-- Open Diagnostics and run `Reprocessar pendentes`.
+```powershell
+pnpm release:check
+```
 
-### IDM returns 403/502
+Also review:
 
-- Use `Modo IDM -> Gerar arquivo .ef2/.ief`.
-- Keep backend running while IDM imports/downloads the generated links.
-- Check `IDM_IMPORT_BASE_URL` points to the backend reachable by IDM.
-
-### Profile refresh is slow
-
-- Use `Varredura rápida` for daily use.
-- Use `Varredura completa` only when media is missing.
+- `.env` is not committed
+- `media/`, `storage/`, logs, and IDM import files are not committed
+- screenshots are current
+- `CHANGELOG.md` is updated
+- Windows agent builds are attached as release artifacts only
 
 ## Legal Notice
 
