@@ -1,0 +1,240 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  username     String        @unique
+  passwordHash String
+  avatarUrl    String?
+  role         String        @default("USER")
+  storageUsed  BigInt        @default(0)
+  storageLimit BigInt        @default(53687091200)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  settings      UserSetting?
+  favorites     Favorite[]
+  downloads     DownloadJob[]
+  refreshTokens RefreshToken[]
+  sessions      Session[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent  String?
+  ipAddress  String?
+  lastActive DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Model {
+  id            String    @id @default(cuid())
+  externalId    String    @unique
+  service       String
+  name          String
+  slug          String    @unique
+  description   String?
+  thumbnailUrl  String?
+  bannerUrl     String?
+  postCount     Int       @default(0)
+  mediaCount    Int       @default(0)
+  likesCount    Int       @default(0)
+  isVerified    Boolean   @default(false)
+  isActive      Boolean   @default(true)
+  metadata      Json?
+  lastScrapedAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  posts     Post[]
+  favorites Favorite[]
+  downloads DownloadJob[]
+  syncRuns  SyncRun[]
+
+  @@index([externalId, service])
+  @@index([slug])
+  @@index([name])
+  @@index([isActive])
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  externalId  String
+  modelId     String
+  model       Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  title       String?
+  description String?
+  postedAt    DateTime?
+  scrapedAt   DateTime @default(now())
+  metadata    Json?
+
+  media Media[]
+
+  @@unique([externalId, modelId])
+  @@index([modelId])
+  @@index([postedAt])
+}
+
+model Media {
+  id           String    @id @default(cuid())
+  postId       String
+  post         Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type         String
+  url          String
+  storageKey   String?
+  storagePath  String?
+  fileSize     BigInt?
+  width        Int?
+  height       Int?
+  duration     Int?
+  thumbnailKey String?
+  mimeType     String?
+  quality      String?
+  isDownloaded Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
+
+  downloads DownloadMedia[]
+
+  @@index([postId])
+  @@index([url])
+  @@index([type])
+  @@index([isDownloaded])
+}
+
+model Favorite {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  modelId        String
+  model          Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  downloadStatus String   @default("PENDING")
+  createdAt      DateTime @default(now())
+
+  @@unique([userId, modelId])
+  @@index([userId])
+  @@index([modelId])
+  @@index([downloadStatus])
+}
+
+model DownloadJob {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  modelId        String
+  model          Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  modelName      String
+  status         String    @default("PENDING")
+  priority       String    @default("NORMAL")
+  progress       Float     @default(0)
+  totalItems     Int       @default(0)
+  completedItems Int       @default(0)
+  failedItems    Int       @default(0)
+  totalSize      BigInt?
+  downloadedSize BigInt    @default(0)
+  speed          Float?
+  errorMessage   String?
+  retryCount     Int       @default(0)
+  maxRetries     Int       @default(3)
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  media DownloadMedia[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model DownloadMedia {
+  id            String      @id @default(cuid())
+  downloadJobId String
+  downloadJob   DownloadJob @relation(fields: [downloadJobId], references: [id], onDelete: Cascade)
+  mediaId       String
+  media         Media       @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  url           String
+  type          String
+  status        String      @default("PENDING")
+  progress      Float       @default(0)
+  filePath      String?
+  fileSize      BigInt?
+  errorMessage  String?
+  updatedAt     DateTime    @default(now()) @updatedAt
+
+  @@index([downloadJobId])
+  @@index([status])
+  @@index([mediaId])
+}
+
+model UserSetting {
+  id                    String @id @default(cuid())
+  userId                String @unique
+  user                  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultQuality        String @default("HD")
+  maxConcurrentDownloads Int   @default(3)
+  downloadSegments      Int    @default(16)
+  downloadEngine        String @default("NATIVE")
+  downloadPath          String?
+  theme                 String @default("DARK")
+  notificationsEnabled  Boolean @default(true)
+  idmMonitorMode        String @default("MONITOR")
+  downloadMode          String @default("AUTO")
+
+  @@index([userId])
+}
+
+model SyncRun {
+  id            String    @id @default(cuid())
+  modelId       String
+  model         Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  slug          String
+  status        String    @default("RUNNING")
+  mode          String    @default("INCREMENTAL")
+  currentPage   Int       @default(0)
+  pagesChecked  Int       @default(0)
+  maxPages      Int       @default(50)
+  postsBefore   Int       @default(0)
+  mediaBefore   Int       @default(0)
+  postsAfter    Int       @default(0)
+  mediaAfter    Int       @default(0)
+  postsImported Int       @default(0)
+  mediaImported Int       @default(0)
+  errorMessage  String?
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([modelId])
+  @@index([slug])
+  @@index([status])
+  @@index([createdAt])
+}

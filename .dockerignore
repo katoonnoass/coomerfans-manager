@@ -1,0 +1,16 @@
+node_modules
+.turbo
+.env
+.env.*
+!.env.example
+media
+storage
+downloads
+dist
+coverage
+packages/*/node_modules
+packages/*/dist
+packages/agent/release
+*.log
+*.exe
+favorite-audit*.json

@@ -1,0 +1,25 @@
+appId: com.coomerfans.agent
+productName: CoomerFans Agent
+copyright: Copyright © 2024 CoomerFans
+directories:
+  output: release
+  buildResources: assets
+files:
+  - dist/**/*
+  - assets/**/*
+  - package.json
+win:
+  target:
+    - target: portable
+      arch:
+        - x64
+  icon: assets/icon.ico
+  signAndEditExecutable: false
+  artifactName: ${productName}-${version}-portable.${ext}
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+electronDownload:
+  cache: null

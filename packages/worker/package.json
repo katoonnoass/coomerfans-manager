@@ -1,0 +1,28 @@
+{
+  "name": "@coomerfans/worker",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm db:generate && tsx watch src/index.ts",
+    "build": "tsc --noEmit",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate --schema prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@coomerfans/shared": "workspace:*",
+    "@prisma/client": "^5.20.0",
+    "bullmq": "^5.12.0",
+    "dotenv": "^16.4.0",
+    "ioredis": "^5.4.0",
+    "playwright": "^1.48.0",
+    "sharp": "^0.33.5",
+    "socket.io-client": "^4.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "prisma": "^5.20.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "coomerfans-saas",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "db:generate": "turbo db:generate",
+    "db:push": "turbo db:push",
+    "validate": "node scripts/prisma-validate.mjs",
+    "release:check": "pnpm db:generate && pnpm validate && pnpm --filter @coomerfans/backend typecheck && pnpm --filter @coomerfans/worker typecheck && pnpm --filter @coomerfans/frontend typecheck && pnpm --filter @coomerfans/frontend build"
+  },
+  "devDependencies": {
+    "redis-memory-server": "^0.16.1",
+    "turbo": "^2.3.0",
+    "typescript": "^5.6.0"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

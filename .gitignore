@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+packages/*/node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+packages/*/.env
+packages/*/.env.*
+
+# Build/cache output
+dist/
+build/
+.next/
+.turbo/
+coverage/
+packages/*/dist/
+packages/*/build/
+packages/agent/release/
+packages/agent/dist/
+
+# Runtime data
+media/
+storage/
+downloads/
+logs/
+*.log
+*.part
+*.part.*
+*_idm_imports/
+_idm_imports/
+
+# Local/generated artifacts
+*.exe
+*.zip
+*.7z
+*.rar
+favorite-audit*.json
+worker-smoke*.log
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
