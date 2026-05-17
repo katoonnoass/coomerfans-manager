@@ -21,10 +21,14 @@ packages/agent/release/
 packages/agent/dist/
 
 # Runtime data
-media/
-storage/
-downloads/
-logs/
+/media/
+/storage/
+/downloads/
+/logs/
+packages/*/media/
+packages/*/storage/
+packages/*/downloads/
+packages/*/logs/
 *.log
 *.part
 *.part.*

@@ -21,7 +21,7 @@ export function AppShell() {
       <Sidebar />
       <div className={sidebarOpen ? 'ml-60' : 'ml-0'}>
         <TopBar />
-        <main className="p-6 pb-24">
+        <main className="p-6 pb-44">
           <Outlet />
         </main>
       </div>

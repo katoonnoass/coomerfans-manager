@@ -586,7 +586,7 @@ export function ModelDetail() {
       </div>
 
       {selectedCount > 0 && (
-        <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 flex-wrap items-center gap-3 rounded-xl border border-neon-cyan/30 bg-void-900/95 px-4 py-3 shadow-neon-cyan/20 backdrop-blur">
+        <div className="fixed bottom-24 left-1/2 z-[70] flex w-[min(560px,calc(100vw-2rem))] -translate-x-1/2 flex-wrap items-center justify-center gap-3 rounded-xl border border-neon-cyan/30 bg-void-900/95 px-4 py-3 shadow-neon-cyan/20 backdrop-blur">
           <span className="text-sm font-mono text-white/75">{selectedCount} selecionados</span>
           <NeonButton className="px-3 py-2 text-xs" onClick={() => setDownloadModalOpen(true)} disabled={isCreating}>
             Baixar
