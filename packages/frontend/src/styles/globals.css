@@ -31,10 +31,50 @@
 
   body {
     @apply bg-void-900 text-white font-sans overflow-x-hidden;
+    color-scheme: dark;
   }
 
   ::selection {
     background: rgba(0, 255, 255, 0.2);
     color: #00ffff;
+  }
+
+  input,
+  textarea,
+  select,
+  option {
+    color-scheme: dark;
+  }
+
+  select {
+    background-color: rgba(18, 18, 26, 0.96);
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  option,
+  optgroup {
+    background-color: #12121a;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  option:checked,
+  option:hover,
+  option:focus {
+    background-color: #1f2937;
+    color: #ffffff;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff;
+    box-shadow: 0 0 0 1000px #12121a inset;
+    caret-color: #ffffff;
   }
 }
